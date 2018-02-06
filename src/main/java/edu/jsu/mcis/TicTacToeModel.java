@@ -75,16 +75,16 @@ public class TicTacToeModel{
 
         /* INSERT YOUR CODE HERE */
 		
-		Mark [width][width] grid;
+       grid = new Mark[width][width];
 
         /* Initialize grid by filling every square with empty marks */
 
         /* INSERT YOUR CODE HERE */
-        for(int i = 0; i < width; i++){
-			for(int j = 0; j < width; j++){
-				gred[i][j] = EMPTY;
-			}
-		}
+    for(int i = 0; i < width; i++){
+		for(int j = 0; j < width; j++){
+                        grid[i][j] = Mark.EMPTY;
+                  }
+        }
     }
 	
     public boolean makeMark(int row, int col) {
@@ -94,15 +94,21 @@ public class TicTacToeModel{
            empty! */
         
         /* INSERT YOUR CODE HERE */
-		if(isValidSquare && !isSquareMarked){ //Using these built in functions to determine if the square is occupied and a valid square
-			if(xTurn){
-				grid[row][col] = X;
-			}
-			else{
-				grid[row][col] = O;
-			}
-		}
-        
+        if(isValidSquare(row,col) && !isSquareMarked(row,col)){ //Using these built in functions to determine if the square is occupied and a valid square
+                   if(xTurn){
+                        grid[row][col] = Mark.X;
+						xTurn = false;
+						
+					}
+					else{
+                        grid[row][col] = Mark.O;
+						xTurn = true;
+					}
+					return true;
+        }  
+		
+		
+        return false; //No return Statement?
     }
 	
     private boolean isValidSquare(int row, int col) {
@@ -110,12 +116,12 @@ public class TicTacToeModel{
         /* Return true if specified location is within grid bounds */
         
         /* INSERT YOUR CODE HERE */
-		if(row < width && col < width && row >= 0 && col >=0){
-			return true;
-		}
-		else{
-			return false;
-		}
+        if(row < width && col < width && row >= 0 && col >=0){
+	return true;
+        }
+        else{
+	return false;
+        }
         
     }
 	
@@ -124,13 +130,12 @@ public class TicTacToeModel{
         /* Return true if square at specified location is marked */
         
         /* INSERT YOUR CODE HERE */
-		if(grid[row][col] == EMPTY){
-			return false;
-		}
-		else{
-			return true;
-		}
-            
+        if(grid[row][col] == Mark.EMPTY){
+	return false;
+        }
+        else{
+	return true;
+        }
     }
 	
     public Mark getMark(int row, int col) {
@@ -138,7 +143,7 @@ public class TicTacToeModel{
         /* Return mark from the square at the specified location */
         
         /* INSERT YOUR CODE HERE */
-		return grid[row][col]
+		return grid[row][col];
             
     }
 	
@@ -149,17 +154,17 @@ public class TicTacToeModel{
            value */
         
         /* INSERT YOUR CODE HERE */
-		if(isMarkWin(X)){
-			return X;
+		if(isMarkWin(Mark.X)){
+			return Result.X;
 		}
-		else if(isMarkWin(O)){
-			return O;
+		else if(isMarkWin(Mark.O)){
+			return Result.O;
 		}
 		else if(isTie()){
-			return TIE
+			return Result.TIE;
 		}
 		else{
-			return NONE;
+			return Result.NONE;
 		}
     }
 	
@@ -169,116 +174,71 @@ public class TicTacToeModel{
            winner */
         
         /* INSERT YOUR CODE HERE */
-		//Loop through the grid checking for marks of the specified type.
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < width; j++){
-				
-				//CHECK IF THE MARK MATCHES
-				if(getMark(i,j) == mark){//The mark is the one we're checking for
-				
-					//CHECKING ABOVE
-					if(i - 1 >= 0){//There actually is an above
-						if(getMark(i-1,j) == mark){//The one above is the one we're checking for
-							if(row - 2 >= 0){// There is an above above
-								if(getMark(i-2,j) == mark){
-									return true;
-								}
-							}
-							else if(row + 1 <= width){//There is a below
-								if(getMark(i+1,j) == mark){
-									return true;
-								}
-							}
-						}
+		int consecutiveMarks = 0;
+		
+		//CHECK FOR VERTICAL WINS
+		for(int i = 0; i < width; i++){//Loop through top row
+				for(int j = 0; j < width; j++){//Go below it until you hit the bottom
+					if(getMark(i,j) == mark){
+						consecutiveMarks++;
 					}
-					//CHECKING BELOW
-					if(i + 1 <= width){//There actually is a below
-						if(getMark(i+1,j) == mark){//The one below is the one we're checking for
-							if(row + 2 <= width){//There is a way below
-								if(getMark(i+2,j) == mark){
-									return true;
-								}
-							}
-						}
-					}
-					//CHECKING LEFT
-					if(j - 1 >= 0){//There is a left
-						if(getMark(i,j-1) == mark){//The mark to the left matches
-							if(j - 2 >= 0){//There is a left left
-								if(getMark(i,j-2) == mark){//The mark to the left left matches
-									return true;
-								}
-							}
-							else if(j + 1 <= width){//There is a right
-								if(getMark(i,j+1) == mark){//The mark to the right matches
-									return true;
-								}
-							}
-						}
-					}
-					//CHECKING RIGHT
-					if(j + 1 <= width){//There is a right
-						if(getMark(i,j+1) == mark){//The mark to the right matches
-							if(j + 2 <= width){//There is a right right
-								if(getMark(i,j+2) == mark){//The mark to the right right matches
-									return true;
-								}
-							}
-						}
-					}
-					//CHECKING LEFT TO RIGHT DIAGONAL
-					if(i - 1 >= 0 && j - 1 >= 0){//If upleft exists
-						if(getMark(i-1,j-1) == mark){//upleft is our mark
-							if(i - 2 >= 0 && j - 2 >= 0){//If upupleft exists 
-								if(getMark(i-2,j-2) == mark){//Upupleft is our mark
-									return true;
-								}
-							}
-							else if(i + 1 <= width && j + 1 <= width){//There is a bottom right
-								if(getMark(i+1,j+1) == mark){//bottom right is our mark
-									return true;
-								}
-							}
-						}
-					}
-					if(i + 1 <= width && j + 1 <= width){//There is a bottom right
-						if(getMark(i+1,j+1) == mark){//Bottom Right is our mark
-							if(i + 2 <= width && j + 2 <= width){//There is a bottom bottom right
-								if(getMark(i+2,j+2) == mark){//Bottom bottom right is our mark
-									return true;
-								}
-							}
-						}
-					}
-					//CHECKING RIGHT TO LEFT DIAGONAL
-					if(i + 1 <= width && j - 1 >= 0){//If up right exists
-						if(getMark(i+1,j-1) == mark){//up right is our mark
-							if(i + 2 <= width && j - 2 >= 0){//If up up right exists 
-								if(getMark(i+2,j-2) == mark){//Up up right is our mark
-									return true;
-								}
-							}
-							else if(i - 1 >= width && j + 1 <= width){//There is a bottom left
-								if(getMark(i-1,j+1) == mark){//bottom left is our mark
-									return true;
-								}
-							}
-						}
-					}
-					if(i - 1 >= 0 && j + 1 <= width){//There is a bottom left
-						if(getMark(i-1,j+1) == mark){//Bottom left is our mark
-							if(i - 2 >= 0 && j + 2 <= width){//There is a bottom bottom left
-								if(getMark(i-2,j+2) == mark){//Bottom bottom left is our mark
-									return true;
-								}
-							}
-						}
+					else{
+						consecutiveMarks = 0;
 					}
 				}
+				if(consecutiveMarks == width){
+					return true;
+				}
+		
+			consecutiveMarks = 0;
+		}
+		
+		//CHECK FOR HORIZONTAL WINS
+		for(int j = 0; j < width; j++){//Loop through the first column
+				for(int i = 0; i < width; i++){//Go to the right of it until you hit the right
+					if(getMark(i,j) == mark){//If the mark matches add one to the total
+						consecutiveMarks++;
+					}
+					else{
+						consecutiveMarks = 0;
+					}
+				}
+				if(consecutiveMarks == width){
+					return true;
+				}
+			consecutiveMarks = 0;
+		}
+		
+		//CHECKING LEFT TO RIGHT DIAGONAL
+		for(int i = 0; i < width; i++){
+			if(getMark(i,i) == mark){
+				consecutiveMarks++;
+			}
+			else{
+				consecutiveMarks = 0;
+			}
+			
+			if(consecutiveMarks == width){
+				return true;
 			}
 		}
+		consecutiveMarks = 0;
+		
+		//CHECKING RIGHT TO LEFT DIAGONAL
+		for(int i = 0; i < width; i++){
+			if(getMark(i,width - 1 - i) == mark){
+				consecutiveMarks++;
+			}
+			else{
+				consecutiveMarks = 0;
+			}
+			if(consecutiveMarks == width){
+				return true;
+			}
+		}
+		consecutiveMarks = 0;
+		
 		return false; //IT SAID TO REMOVE but there's got to be a way to tell you no it didn't win. We've tried everything, no win.
-
     }
 	
     private boolean isTie() {
@@ -286,23 +246,22 @@ public class TicTacToeModel{
         /* Check the squares of the board to see if the game is a tie */
 
         /* INSERT YOUR CODE HERE */
-		//Check to see if there's an empty space left
-		for(int i = 0; i < width; i++){
-			for(int j = 0; j < width; j++){
-				if(getMark(i,j) == EMPTY){
-					return false;
-				}
-			}
-		}
+        //Check to see if there's an empty space left
+        for(int i = 0; i < width; i++){
+	for(int j = 0; j < width; j++){
+                        if(getMark(i,j) == Mark.EMPTY){
+                                return false;
+                         }
+                    }
+         }
 		
-		//If we get here then every space is not empty
-		if(isMarkWin(X) or isMarkWin(O)){
-			return false;
-		}
-		else{
-			return true;
-		}
-        
+        //If we get here then every space is not empty
+        if(isMarkWin(Mark.X) || isMarkWin(Mark.O)){
+	return false;
+        }
+        else{
+	return true;
+        }
     }
 
     public boolean isGameover(){
@@ -324,7 +283,7 @@ public class TicTacToeModel{
     public int getWidth(){
         
         /* Getter for width */
-        
+		
         return width;
         
     }

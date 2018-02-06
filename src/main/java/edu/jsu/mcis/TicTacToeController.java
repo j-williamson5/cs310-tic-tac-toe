@@ -35,8 +35,19 @@ public class TicTacToeController {
            error message using view's showInputError() if input is invalid. */
         
         /* INSERT YOUR CODE HERE */
+	String input = keyboard.nextLine();
+	int row = Character.getNumericValue(input.charAt(0));
+	int col = Character.getNumericValue(input.charAt(2));
 
+	if(row < model.getWidth() && col < model.getWidth() && row >= 0 && col >=0){//If the input is valid
+		model.makeMark(row,col);
+	}
+	else{
+		view.showInputError();
+	}
         
+    model.getResult();
+
     }
 
 }

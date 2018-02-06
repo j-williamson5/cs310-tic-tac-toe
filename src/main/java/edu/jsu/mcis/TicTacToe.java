@@ -27,8 +27,8 @@ public class TicTacToe {
         TicTacToeView view = new TicTacToeView(model);
         TicTacToeController controller = new TicTacToeController(model, view);
         
-        /* MAIN LOOP */
-
+		/* MAIN LOOP */
+		//System.out.println("Width: " + Integer.toString(model.getWidth()));
         while (!model.isGameover()){
             
             view.viewModel();
