@@ -1,5 +1,12 @@
 package edu.jsu.mcis;
 
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import javax.swing.*;
+import java.applet.*;
+import java.awt.event.ActionListener;
+import java.awt.event.*;
+
 public class TicTacToe {
 
     private static final int DEFAULT_WIDTH = 3;
@@ -25,22 +32,15 @@ public class TicTacToe {
 
         TicTacToeModel model = new TicTacToeModel(width);
         TicTacToeView view = new TicTacToeView(model);
-        TicTacToeController controller = new TicTacToeController(model, view);
+		
+		//Initialize Window
+        JFrame win = new JFrame("Tic-Tac-Toe");
+        win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-		/* MAIN LOOP */
-		//System.out.println("Width: " + Integer.toString(model.getWidth()));
-        while (!model.isGameover()){
-            
-            view.viewModel();
-            controller.controlModel();
-            
-        }
-        
-        /* Game is over; show the final board and the winner */
-
-        view.viewModel();
-
-        view.showResult(model.getResult().toString());
+        win.add(view);
+        win.pack();
+        win.setVisible(true);
+		win.setSize(800,600);
 
     }
 }

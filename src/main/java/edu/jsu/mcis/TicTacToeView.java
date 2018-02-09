@@ -1,43 +1,87 @@
 package edu.jsu.mcis;
 
 import static edu.jsu.mcis.TicTacToeModel.Mark.EMPTY;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import javax.swing.*;
+import java.applet.*;
+import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class TicTacToeView {
+public class TicTacToeView extends JPanel implements ActionListener{
 
     private TicTacToeModel model;
     
-    /* CONSTRUCTOR */
-	
+ 
+	private JPanel buttonsPanel;
+	private JButton[][] squares;
+	private JLabel resultLabel;
+		
+	/* CONSTRUCTOR */
+
     public TicTacToeView(TicTacToeModel model) {
         
         this.model = model;
-        
-    }
-	
-    public void viewModel() {
-        
-        /* Print the board to the console (see examples) */
-        
-        /* INSERT YOUR CODE HERE */
-		String heading = "\n  ";
-		for(int i = 0; i < model.getWidth(); i++){
-			heading += Integer.toString(i);
+		
+		this.squares = new JButton[model.getWidth()][model.getWidth()];
+		buttonsPanel = new JPanel(new GridLayout(model.getWidth(),model.getWidth()));
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
+		this.resultLabel = new JLabel();
+		this.resultLabel.setName("ResultLabel");
+		this.resultLabel.setText("Result");
+		
+		
+		// loop through every row and col
+		for(int row = 0; row < model.getWidth(); row++){
+			for(int col = 0; col < model.getWidth(); col++){
+				squares[row][col] = new JButton();
+				squares[row][col].addActionListener(this);
+				squares[row][col].setName("Square" + row + col);
+				// finish initializing JButton; add to JPanel
+				buttonsPanel.add(squares[row][col]);
+			}	
 		}
-	System.out.print(heading + "\n");//This is the heading and blank line
-	for(int i = 0; i < model.getWidth(); i++){
-        System.out.print("\n" + Integer.toString(i) + " ");//Print the 0,1,2 etc on the left and a space as well
-        for(int j = 0; j < model.getWidth(); j++){
-			if(model.getMark(i,j) == EMPTY){//If the square is empty print the -
-				System.out.print("-");
-				}
-			else{
-				System.out.print(model.getMark(i,j));//If the square isn't empty print the mark in it
+		add(buttonsPanel);
+		add(resultLabel);
+		
+    }
+	public void viewModel(){
+		for(int row = 0; row < model.getWidth(); row++){
+			for(int col = 0; col < model.getWidth(); col++){
+				switch(model.getMark(row,col)){
+					case X:
+						squares[row][col].setText("X");
+						break;
+					case O:
+						squares[row][col].setText("O");
+						break;
 				}
 			}
 		}
-		System.out.print("\n\n\n\n");
 	}
-
+	
+	@Override
+	public void actionPerformed(ActionEvent e){
+		
+		if(!model.isGameover()){
+			//Set up the source and cast it to a jbutton for use with .getName and .setText
+			JButton button = (JButton) e.getSource();
+			
+			
+			//Get the row and col to change the grid in the model
+			int row = Integer.parseInt(button.getName().substring(6,7));
+			int col = Integer.parseInt(button.getName().substring(7,8));
+			
+			model.makeMark(row,col);
+			
+			
+		}
+		if(model.isGameover()){
+			showResult(model.getResult().toString());
+		}
+		viewModel();
+	}
     public void showNextMovePrompt() {
 
         /* Display a prompt for the player's next move (see examples) */
@@ -67,7 +111,7 @@ public class TicTacToeView {
     public void showResult(String r) {
 
         /* Display final winner */
-
-        System.out.println("\n" + r + "!");
+		
+        resultLabel.setText(r);
     }
 }
