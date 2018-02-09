@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TicTacToeView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">cs310-tic-tac-toe</a> &gt; <a href="index.source.html" class="el_package">edu.jsu.mcis</a> &gt; <span class="el_source">TicTacToeView.java</span></div><h1>TicTacToeView.java</h1><pre class="source lang-java linenums">package edu.jsu.mcis;
+
+import static edu.jsu.mcis.TicTacToeModel.Mark.EMPTY;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import javax.swing.*;
+import java.applet.*;
+import java.awt.event.ActionListener;
+import java.awt.event.*;
+
+public class TicTacToeView extends JPanel implements ActionListener{
+
+    private TicTacToeModel model;
+    
+ 
+	private JPanel buttonsPanel;
+	private JButton[][] squares;
+	private JLabel resultLabel;
+		
+	/* CONSTRUCTOR */
+
+<span class="nc" id="L22">    public TicTacToeView(TicTacToeModel model) {</span>
+        
+<span class="nc" id="L24">        this.model = model;</span>
+		
+<span class="nc" id="L26">		this.squares = new JButton[model.getWidth()][model.getWidth()];</span>
+<span class="nc" id="L27">		buttonsPanel = new JPanel(new GridLayout(model.getWidth(),model.getWidth()));</span>
+<span class="nc" id="L28">		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));</span>
+		
+<span class="nc" id="L30">		this.resultLabel = new JLabel();</span>
+<span class="nc" id="L31">		this.resultLabel.setName(&quot;ResultLabel&quot;);</span>
+<span class="nc" id="L32">		this.resultLabel.setText(&quot;Result&quot;);</span>
+		
+		
+		// loop through every row and col
+<span class="nc bnc" id="L36" title="All 2 branches missed.">		for(int row = 0; row &lt; model.getWidth(); row++){</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">			for(int col = 0; col &lt; model.getWidth(); col++){</span>
+<span class="nc" id="L38">				squares[row][col] = new JButton();</span>
+<span class="nc" id="L39">				squares[row][col].addActionListener(this);</span>
+<span class="nc" id="L40">				squares[row][col].setName(&quot;Square&quot; + row + col);</span>
+				// finish initializing JButton; add to JPanel
+<span class="nc" id="L42">				buttonsPanel.add(squares[row][col]);</span>
+			}	
+		}
+<span class="nc" id="L45">		add(buttonsPanel);</span>
+<span class="nc" id="L46">		add(resultLabel);</span>
+		
+<span class="nc" id="L48">    }</span>
+	public void viewModel(){
+<span class="nc bnc" id="L50" title="All 2 branches missed.">		for(int row = 0; row &lt; model.getWidth(); row++){</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">			for(int col = 0; col &lt; model.getWidth(); col++){</span>
+<span class="nc bnc" id="L52" title="All 3 branches missed.">				switch(model.getMark(row,col)){</span>
+					case X:
+<span class="nc" id="L54">						squares[row][col].setText(&quot;X&quot;);</span>
+<span class="nc" id="L55">						break;</span>
+					case O:
+<span class="nc" id="L57">						squares[row][col].setText(&quot;O&quot;);</span>
+						break;
+				}
+			}
+		}
+<span class="nc" id="L62">	}</span>
+	
+	@Override
+	public void actionPerformed(ActionEvent e){
+		
+<span class="nc bnc" id="L67" title="All 2 branches missed.">		if(!model.isGameover()){</span>
+			//Set up the source and cast it to a jbutton for use with .getName and .setText
+<span class="nc" id="L69">			JButton button = (JButton) e.getSource();</span>
+			
+			
+			//Get the row and col to change the grid in the model
+<span class="nc" id="L73">			int row = Integer.parseInt(button.getName().substring(6,7));</span>
+<span class="nc" id="L74">			int col = Integer.parseInt(button.getName().substring(7,8));</span>
+			
+<span class="nc" id="L76">			model.makeMark(row,col);</span>
+			
+			
+		}
+<span class="nc bnc" id="L80" title="All 2 branches missed.">		if(model.isGameover()){</span>
+<span class="nc" id="L81">			showResult(model.getResult().toString());</span>
+		}
+<span class="nc" id="L83">		viewModel();</span>
+<span class="nc" id="L84">	}</span>
+    public void showNextMovePrompt() {
+
+        /* Display a prompt for the player's next move (see examples) */
+
+        /* INSERT YOUR CODE HERE */
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		if(model.isXTurn()){</span>
+<span class="nc" id="L92">			System.out.println(&quot;\n&quot; + &quot;Player 1 (X) Move:&quot;);</span>
+		}
+
+		else{
+<span class="nc" id="L96">			System.out.println(&quot;\n&quot; + &quot;Player 2 (O) Move:&quot;);</span>
+		}
+
+<span class="nc" id="L99">		System.out.println(&quot;Enter the row and column numbers, separated by a space: &quot;);</span>
+<span class="nc" id="L100">    }</span>
+
+    public void showInputError() {
+
+        /* Display an error if input is invalid (see examples) */
+
+        /* INSERT YOUR CODE HERE */
+	
+<span class="nc" id="L108">         System.out.println(&quot;ERROR: Incorrect input&quot;);</span>
+<span class="nc" id="L109">    }</span>
+
+    public void showResult(String r) {
+
+        /* Display final winner */
+		
+<span class="nc" id="L115">        resultLabel.setText(r);</span>
+<span class="nc" id="L116">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
