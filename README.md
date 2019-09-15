@@ -6,7 +6,7 @@ This game can be utilized by any machine running Java. Unit tests are built and 
 
 ### Prerequisites
 Luckily, there is not much required to run the project. The GUI is a Swing GUI which is supported via Java 8 through 2025.
-For unit testing, you will need to install Gradle (see WHATEVER I DECIDE TO CALL THE INSTALL below).
+For unit testing, you will need to install Gradle (see Installing below).
 
 You'll need
 ```
